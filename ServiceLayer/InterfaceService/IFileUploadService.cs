@@ -10,8 +10,8 @@ namespace ServiceLayer.InterfaceService
 {
     public interface IFileUploadService
     {
-        Task<FileUploadDto> GetByIdAsync(int id);
-        Task<FileUpload> GetAllAsync();
+        Task<FileUpload> GetByIdAsync(int id);
+        Task<IEnumerable<FileUpload>> GetAllAsync();
         Task<FileUpload> AddAsync(FileUploadDto entity);
         Task<FileUpload> RemoveAsync(Guid id);
 

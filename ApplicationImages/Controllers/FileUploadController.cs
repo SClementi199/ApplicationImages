@@ -42,19 +42,24 @@ namespace ApplicationImages.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetImageById(int id)
         {
-            var res = await _unitOfWork.FileUploadRepository.GetByIdAsync(id);
-
-            using (MemoryStream stream = new MemoryStream(res.Files))
-            {
-
-                Image image = Image.FromStream(stream);
-
-                // You can return the image as a file result
-                return File(res.Files, "image/jpg");
-            }
+            var res = await _uploadService.GetByIdAsync(id);
+            var result = File(res.Files, "image/png");
+            return result; 
         }
 
-       
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<FileContentResult>>> GetAllImage()
+        {
+            var list = await _uploadService.GetAllAsync();
+            List<FileContentResult> imageList = new List<FileContentResult>();
+            foreach (var file in list)
+            {
+                imageList.Add(File(file.Files, "image/*"));
+            }
+            return imageList;
+        }
+
+
 
     }
 }

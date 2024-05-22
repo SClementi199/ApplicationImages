@@ -13,6 +13,7 @@ using System.Drawing;
 using Image = System.Drawing.Image;
 using System.Net.Mime;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ServiceLayer.Service
 {
@@ -47,18 +48,21 @@ namespace ServiceLayer.Service
             {
                 return null;
             }
-
         }
 
-        public async Task<FileUploadDto> GetByIdAsync(int id)
+        public async Task<FileUpload> GetByIdAsync(int id)
         {
-            return null;
+            var res = await _unitOfWork.FileUploadRepository.GetByIdAsync(id);
+            
+
+            return res;
         }
 
 
-        public async Task<FileUpload> GetAllAsync()
+        public async Task<IEnumerable<FileUpload>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var list = await _unitOfWork.FileUploadRepository.GetAllAsync();
+            return list;
         }
 
         
