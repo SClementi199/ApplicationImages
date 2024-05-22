@@ -37,7 +37,15 @@ namespace ApplicationImages.Controllers
         public async Task<IActionResult> GetImageById(int id)
         {
             var res = await _uploadService.GetByIdAsync(id);
-            return Ok(res); 
+            byte[] bytes = Convert.FromBase64String(res.Files);
+
+            // Create a MemoryStream and write the byte array to it
+            using (MemoryStream ms = new MemoryStream(bytes))
+            {
+                // Create an image from the MemoryStream
+                Image image = Image.FromStream(ms);
+                //return image.Save("file.svg", System.Drawing.Imaging.ImageFormat.)
+            }
         }
 
         [HttpGet]
