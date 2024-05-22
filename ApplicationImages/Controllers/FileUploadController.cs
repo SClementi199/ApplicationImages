@@ -44,13 +44,14 @@ namespace ApplicationImages.Controllers
         {
             var res = await _unitOfWork.FileUploadRepository.GetByIdAsync(id);
 
+            using (MemoryStream stream = new MemoryStream(res.Files))
+            {
 
-            // Create an HttpResponseMessage with the image data
-            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-            response.Content = new StreamContent(new MemoryStream(res.Files));
-            response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpg");
+                Image image = Image.FromStream(stream);
 
-            return Ok(response);
+                // You can return the image as a file result
+                return File(res.Files, "image/jpg");
+            }
         }
 
        
