@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBLayer.Migrations
 {
     [DbContext(typeof(ImageContext))]
-    [Migration("20240520104651_Initial")]
+    [Migration("20240522081949_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -32,9 +32,9 @@ namespace DBLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<byte[]>("Files")
+                    b.Property<string>("Files")
                         .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageTitle")
                         .IsRequired()

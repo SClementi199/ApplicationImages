@@ -4,16 +4,7 @@ using DBLayer.Model;
 using ServiceLayer.InterfaceService;
 using Microsoft.AspNetCore.Hosting;
 using AutoMapper;
-using static System.Net.Mime.MediaTypeNames;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
-using System.Collections;
-using iTextSharp.text.pdf.qrcode;
 using System.Drawing;
-using Image = System.Drawing.Image;
-using System.Net.Mime;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ServiceLayer.Service
 {
@@ -29,15 +20,36 @@ namespace ServiceLayer.Service
         }
         public async Task<FileUpload> AddAsync(FileUploadDto entity)
         {
-            if (entity.imageData.Length > 0)
+            //if (entity.imageData.Length > 0)
+            //{
+            //    using (var memoryStream = new MemoryStream())
+            //    {
+            //        await entity.imageData.CopyToAsync(memoryStream);
+            //        var image = new FileUpload
+            //        {
+            //            ImageTitle = entity.name,
+            //            Files = memoryStream.ToArray()
+            //        };
+            //        var res = await _unitOfWork.FileUploadRepository.AddAsync(image);
+            //        await _unitOfWork.SaveAsync();
+            //        return res;
+            //    }
+            //}
+            //else
+            //{
+            //    return null;
+            //}
+            if(entity.imageData.Length > 0)
             {
-                using (var memoryStream = new MemoryStream())
+                using (var ms = new MemoryStream())
                 {
-                    await entity.imageData.CopyToAsync(memoryStream);
+                    await entity.imageData.CopyToAsync(ms);
+                    var fileBytes = ms.ToArray();
+                    var base64String = Convert.ToBase64String(fileBytes);
                     var image = new FileUpload
                     {
                         ImageTitle = entity.name,
-                        Files = memoryStream.ToArray()
+                        Files = base64String
                     };
                     var res = await _unitOfWork.FileUploadRepository.AddAsync(image);
                     await _unitOfWork.SaveAsync();
@@ -48,12 +60,15 @@ namespace ServiceLayer.Service
             {
                 return null;
             }
+            
         }
 
         public async Task<FileUpload> GetByIdAsync(int id)
         {
             var res = await _unitOfWork.FileUploadRepository.GetByIdAsync(id);
-            
+            byte[] imageBytes = Convert.FromBase64String(res.Files);
+            string imageSrc = Convert.ToBase64String(imageBytes);
+            res.Files = imageSrc;
 
             return res;
         }
@@ -62,7 +77,16 @@ namespace ServiceLayer.Service
         public async Task<IEnumerable<FileUpload>> GetAllAsync()
         {
             var list = await _unitOfWork.FileUploadRepository.GetAllAsync();
-            return list;
+            List<FileUpload> res = new List<FileUpload>();
+            foreach (var item in list)
+            {
+                byte[] imageBytes = Convert.FromBase64String(item.Files);
+                string imageSrc = Convert.ToBase64String(imageBytes);
+                item.Files = imageSrc;
+                res.Add(item);
+            }
+
+            return res;
         }
 
         

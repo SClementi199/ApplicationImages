@@ -1,16 +1,7 @@
 ﻿using DBLayer.DTO;
 using DBLayer.Interface;
-using DBLayer.Model;
-using iTextSharp.text.pdf.qrcode;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.InterfaceService;
-using System.Collections;
-using System.Drawing;
-using System.IO;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Threading;
 
 namespace ApplicationImages.Controllers
 {
@@ -43,20 +34,15 @@ namespace ApplicationImages.Controllers
         public async Task<IActionResult> GetImageById(int id)
         {
             var res = await _uploadService.GetByIdAsync(id);
-            var result = File(res.Files, "image/png");
-            return result; 
+
+            return Ok(res); 
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FileContentResult>>> GetAllImage()
         {
             var list = await _uploadService.GetAllAsync();
-            List<FileContentResult> imageList = new List<FileContentResult>();
-            foreach (var file in list)
-            {
-                imageList.Add(File(file.Files, "image/*"));
-            }
-            return imageList;
+            return Ok(list);
         }
 
 

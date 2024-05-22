@@ -17,7 +17,7 @@ namespace DBLayer.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ImageTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Files = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                    Files = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
