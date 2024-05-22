@@ -1,7 +1,10 @@
 ﻿using DBLayer.DTO;
 using DBLayer.Interface;
+using iTextSharp.text.pdf.qrcode;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.InterfaceService;
+using Svg;
+using System.Drawing;
 
 namespace ApplicationImages.Controllers
 {
@@ -34,7 +37,6 @@ namespace ApplicationImages.Controllers
         public async Task<IActionResult> GetImageById(int id)
         {
             var res = await _uploadService.GetByIdAsync(id);
-
             return Ok(res); 
         }
 
